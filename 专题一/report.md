@@ -2,7 +2,7 @@
 王子龙 18281218 wangzilong@bjtu.edu.cn
 ## 实验环境
 类目 | 详情
--: | - :
+:-: | :-:
 操作系统 | macOS Big Sur 11.2.3
 CPU | Intel Core i5-7260U@2.3Ghz x2
 IDE | CLion 2020.3.3 Build #CL-203.7717.62
