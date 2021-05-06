@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation/专题一/code/Classification.h
+
+/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation/专题一/code/Handler.h
+
+/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation/专题一/code/Output.h
+
+/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation/专题一/code/main.cpp
+bits/stdc++.h
+-
+Classification.h
+/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation/专题一/code/Classification.h
+Handler.h
+/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation/专题一/code/Handler.h
+Output.h
+/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation/专题一/code/Output.h
+

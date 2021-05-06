@@ -1,0 +1,12 @@
+typedef  struct restype {
+	int tag;		/*分界符标签*/
+	double num;		/*种别码*/
+	float word;	/*单词符号*/
+};
+while (infile.get(ch))
+	{
+		my_str += ch;
+	}
+	infile.close();             
+	return my_str;
+int aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
