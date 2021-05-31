@@ -1,4 +1,4 @@
-# Install script for directory: /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code
+# Install script for directory: /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题二/code
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题二/code/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

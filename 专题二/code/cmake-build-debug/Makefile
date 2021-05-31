@@ -67,10 +67,10 @@ RM = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code
+CMAKE_SOURCE_DIR = /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题二/code
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题二/code/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -99,9 +99,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/cmake-build-debug/CMakeFiles /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/cmake-build-debug//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题二/code/cmake-build-debug/CMakeFiles /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题二/code/cmake-build-debug//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题二/code/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -142,87 +142,6 @@ code/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/build
 .PHONY : code/fast
 
-Classification.o: Classification.cpp.o
-
-.PHONY : Classification.o
-
-# target to build an object file
-Classification.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/Classification.cpp.o
-.PHONY : Classification.cpp.o
-
-Classification.i: Classification.cpp.i
-
-.PHONY : Classification.i
-
-# target to preprocess a source file
-Classification.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/Classification.cpp.i
-.PHONY : Classification.cpp.i
-
-Classification.s: Classification.cpp.s
-
-.PHONY : Classification.s
-
-# target to generate assembly for a file
-Classification.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/Classification.cpp.s
-.PHONY : Classification.cpp.s
-
-Handler.o: Handler.cpp.o
-
-.PHONY : Handler.o
-
-# target to build an object file
-Handler.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/Handler.cpp.o
-.PHONY : Handler.cpp.o
-
-Handler.i: Handler.cpp.i
-
-.PHONY : Handler.i
-
-# target to preprocess a source file
-Handler.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/Handler.cpp.i
-.PHONY : Handler.cpp.i
-
-Handler.s: Handler.cpp.s
-
-.PHONY : Handler.s
-
-# target to generate assembly for a file
-Handler.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/Handler.cpp.s
-.PHONY : Handler.cpp.s
-
-Output.o: Output.cpp.o
-
-.PHONY : Output.o
-
-# target to build an object file
-Output.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/Output.cpp.o
-.PHONY : Output.cpp.o
-
-Output.i: Output.cpp.i
-
-.PHONY : Output.i
-
-# target to preprocess a source file
-Output.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/Output.cpp.i
-.PHONY : Output.cpp.i
-
-Output.s: Output.cpp.s
-
-.PHONY : Output.s
-
-# target to generate assembly for a file
-Output.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/Output.cpp.s
-.PHONY : Output.cpp.s
-
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -259,15 +178,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... code"
-	@echo "... Classification.o"
-	@echo "... Classification.i"
-	@echo "... Classification.s"
-	@echo "... Handler.o"
-	@echo "... Handler.i"
-	@echo "... Handler.s"
-	@echo "... Output.o"
-	@echo "... Output.i"
-	@echo "... Output.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
