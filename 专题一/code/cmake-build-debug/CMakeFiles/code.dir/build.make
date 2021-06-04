@@ -89,62 +89,17 @@ CMakeFiles/code.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/code.dir/main.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/main.cpp -o CMakeFiles/code.dir/main.cpp.s
 
-CMakeFiles/code.dir/Classification.cpp.o: CMakeFiles/code.dir/flags.make
-CMakeFiles/code.dir/Classification.cpp.o: ../Classification.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/code.dir/Classification.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/Classification.cpp.o -c /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Classification.cpp
-
-CMakeFiles/code.dir/Classification.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/code.dir/Classification.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Classification.cpp > CMakeFiles/code.dir/Classification.cpp.i
-
-CMakeFiles/code.dir/Classification.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/code.dir/Classification.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Classification.cpp -o CMakeFiles/code.dir/Classification.cpp.s
-
-CMakeFiles/code.dir/Handler.cpp.o: CMakeFiles/code.dir/flags.make
-CMakeFiles/code.dir/Handler.cpp.o: ../Handler.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/code.dir/Handler.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/Handler.cpp.o -c /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Handler.cpp
-
-CMakeFiles/code.dir/Handler.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/code.dir/Handler.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Handler.cpp > CMakeFiles/code.dir/Handler.cpp.i
-
-CMakeFiles/code.dir/Handler.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/code.dir/Handler.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Handler.cpp -o CMakeFiles/code.dir/Handler.cpp.s
-
-CMakeFiles/code.dir/Output.cpp.o: CMakeFiles/code.dir/flags.make
-CMakeFiles/code.dir/Output.cpp.o: ../Output.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/code.dir/Output.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/Output.cpp.o -c /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Output.cpp
-
-CMakeFiles/code.dir/Output.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/code.dir/Output.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Output.cpp > CMakeFiles/code.dir/Output.cpp.i
-
-CMakeFiles/code.dir/Output.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/code.dir/Output.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Output.cpp -o CMakeFiles/code.dir/Output.cpp.s
-
 # Object files for target code
 code_OBJECTS = \
-"CMakeFiles/code.dir/main.cpp.o" \
-"CMakeFiles/code.dir/Classification.cpp.o" \
-"CMakeFiles/code.dir/Handler.cpp.o" \
-"CMakeFiles/code.dir/Output.cpp.o"
+"CMakeFiles/code.dir/main.cpp.o"
 
 # External object files for target code
 code_EXTERNAL_OBJECTS =
 
 code: CMakeFiles/code.dir/main.cpp.o
-code: CMakeFiles/code.dir/Classification.cpp.o
-code: CMakeFiles/code.dir/Handler.cpp.o
-code: CMakeFiles/code.dir/Output.cpp.o
 code: CMakeFiles/code.dir/build.make
 code: CMakeFiles/code.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable code"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable code"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/code.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

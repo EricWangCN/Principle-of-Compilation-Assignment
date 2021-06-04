@@ -2,12 +2,12 @@
 王子龙 18281218 wangzilong@bjtu.edu.cn
 ## 实验环境
 类目 | 详情
-:-: | :-:
-操作系统 | macOS Big Sur 11.2.3
+:-: | ---
+操作系统 | macOS Big Sur 11.3.1 
 CPU | Intel Core i5-7260U@2.3Ghz x2
-IDE | CLion 2020.3.3 Build #CL-203.7717.62
+IDE | CLion 2021.1.1 Build #CL-211.7142.21
 Compiler | Apple clang version 11.0.0 (clang-1100.0.33.8)
-## 实验要求
+## 实验要求（实验功能描述）
 ### 实验项目
 以下为正则文法所描述的C语言子集单词符号的示例，请补充单词符号： ++，--， >>,  <<, += , -= ,\*=, /= ，&&（逻辑与），||（逻辑或），！（逻辑非）等等，给出补充后描述C语言子集单词符号的正则文法，设计并实现其词法分析程序。
 <标识符>→字母︱ <标识符>字母︱ <标识符>数字
@@ -25,282 +25,381 @@ Compiler | Apple clang version 11.0.0 (clang-1100.0.33.8)
 - 给出各单词符号的类别编码；
 - 词法分析程序应能发现输入串中的错误；
 - 词法分析作为单独一遍编写，词法分析结果为二元式序列组成的中间文件；（4）设计两个测试用例（尽可能完备），并给出测试结果。
-## 实验内容
-### 文件列表
-文件 | 说明
-:-: | :-:
-main.cpp | 程序入口
-Classification.h / Classification.cpp | 判断字符是否为字母、数字、空格（回车等）或分隔符的函数
-Handler.h / Handler.cpp | 错误处理或结尾处理
-Output.h / Output.cpp | 文件输出
-### 文件功能介绍
-#### Classification.cpp
-**Classification.cpp**共包含了四个字符类型判断相关的函数，返回值均为bool型：
-##### isAplhabet
-函数isAlphabet通过输入字符与字母边界的ASCII码比较判断，其具体实现如下：
-
-```C++
-bool isAlphabet(char ch) {
-    return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'));
-}
+## 主要数据结构描述
+### 字符表数据结构
+``` C++
+typedef struct glossary
+{
+    string key;
+    int seq;
+    string mnemonic;
+} Glossary;
 ```
-##### isNumber
-函数isNumber通过输入字符与数字边界的ASCII码比较判断，其具体实现如下：
+字符表每一个表项均为一个结构体，包含表示符号名称的`key`，类别编码的`seq`，以及助记符`mnemonic`。字符表的三个部分，保留字表，单字分隔符表，双字分隔符表均用结构体数组实现。
+## 程序结构描述
+### lookup	
+`Lookup`函数用于在保留字字符表数组中寻找给定`Token`字符串，如果找到，返回对应保留字的结构体，如果没有则返回一个`key`，`mnemonic`均为空串，`seq`等于0的结构体。
 ```C++
-bool isNumber(char ch) {
-    return (ch >= '0' && ch <= '9');
-}
-```
-##### isWhiteSpace
-函数isWhiteSpace通过直接匹配进行判断，其具体实现如下：
-```C++
-bool isWhiteSpace(char ch) {
-    return (ch == ' ' || ch == '\n' || ch == '\t' || ch == '\r');
-}
-```
-##### isSeparator
-函数isSeparator通过直接匹配来判断分隔符，其具体实现如下：
-```C++
-bool isSeparator(char ch) {
-    return (ch == ';' || ch == ',' || ch == '(' || ch == ')' || ch == '{' || ch == '}');
-}
-```
-#### Handler.cpp
-**Handler.cpp**包含了进行打印或错误处理的相关函数：
-##### handleError
-函数handleError是若程序判断到输入错误后，程序直接读取到下一分隔符并打印，其具体实现如下：
-```C++
-void handleError() {
-    char ch;
-    do {
-        ifile >> ch;
-    } while (!isWhiteSpace(ch));
-    output("error");
-}
-```
-##### handleEndOfWord
-函数handleEndOfWord是若程序判断输入正确，读取到下一分隔符后打印，其具体实现如下：
-```C++
-void handleEndOfWord(string str) {
-    char ch;
-    ifile >> ch;
-    // 正确结束
-    if (isWhiteSpace(ch) || isSeparator(ch)){
-        output(str);
-    }
-        // 错误结束
-    else {
-        handleError();
-    };
-    ifile.seekg(-1, ios::cur);  // 文件指针回退
-}
-```
-#### Output.cpp
-**Output.cpp**包含了一个STL中map的数据结构以及一个文件输出相关函数:
-
-##### map
-此map具体实现如下：
-```C++
-std::map<std::string, std::string> IDofWords;
-```
-map的key值为标识符，value对应为其值。
-##### output
-函数output包含两个参数
-参数 | 说明
-:-: | :-:
-type | 标识符类型
-item | 标识符的值
-其具体实现如下：
-```C++
-void output(string type, string item = "") {
-    if (type == "error") {
-        ofile << "error" << endl;
-        cout << "error" << endl;
-    }
-    else if (type == "integer") {
-        ofile << "[" + IDofWords[type] + ", " + item + "]" << endl;
-        cout << "[" + IDofWords[type] + ", " + item + "]" << endl;
-    }
-    else if (type == "identifier") {
-        // 判断是否为保留字
-        if (IDofWords.count(item) == 1) {
-            ofile << "[" + IDofWords[item] + ", " + item + "]" << endl;
-            cout << "[" + IDofWords[item] + ", " + item + "]" << endl;
-        }
-        else {
-            ofile << "[" + IDofWords[type] + ", " + item + "]" << endl;
-            cout << "[" + IDofWords[type] + ", " + item + "]" << endl;
+Glossary lookup(string token)
+{
+    int len = sizeof(GLO) / sizeof(GLO[0]);
+    for (int i = 0; i < len; i++)
+    {
+        if (token == GLO[i].key)
+        {
+            return GLO[i];
         }
     }
-    else {
-        ofile << "[" + IDofWords[type] + ", " + type + "]" << endl;
-        cout << "[" + IDofWords[type] + ", " + type + "]" << endl;
+    Glossary res = {" ", 0, " "};
+    return res;
+}
+```
+### lookseq
+`Lookseq`函数用于在单字分隔符中寻找给定字符`ch`，如果找到返回对应单字分隔符的结构体，如果没有则返回一个`key`，`mnemonic`均为空串，`seq`等于0的结构体。因为双字分隔符的首字符必是单字分隔符，所以通过此函数便可以判断一串字符后面是否有分隔符存在。
+```C++
+Glossary lookSep(char ch)
+{
+    char *sep = new char[2];
+    sep[0] = ch;
+    sep[1] = '\0';
+    int len = sizeof(WSep) / sizeof(WSep[0]);
+    for (int i = 0; i < len; i++)
+    {
+        if (sep == WSep[i].key)
+        {
+            return WSep[i];
+        }
+    }
+    Glossary res = {" ", 0, " "};
+    return res;
+}
+```
+### out
+`Out`函数用于输出二元组，`c`如果为0，则认定`Token`包含的是用户自定义变量， 如果不为`0`，则按照`c`对应的字符表表项输出。
+```C++
+void out(int c, string val)
+{
+    if (c <= 25)
+    {
+        if (val == " ")
+        {
+            cout << "( " << c << " , " << GLO[c - 1].key << " )" << endl;
+        }
+        else
+        {
+            cout << "( " << c << " , " << val << " )" << endl;
+        }
+        return;
+    }
+    else if (c <= 41)
+    {
+        cout << "( " << c << " , " << WSep[c - 26].key << " )" << endl;
+    }
+    else
+    {
+        cout << "( " << c << " , " << DSep[c - 42].key << " )" << endl;
     }
 }
 ```
-#### main.cpp
-在**main.cpp**中，首先声明了两个全局变量，分别为std::ifstream类型的ifile，用作文件读入以及std::ofstream类型的ofile用于输出文件写入。
-随后进入主函数，在主函数中首先声明一个字符（character）型变量ch用于存放当前读入字符，同时将ifile通过`ifile >> noskipws;`设置为允许读空格。随后若文件不能打开，则直接退出程序：
+### Error
+`Error`函数是用于进行错误提示。
 ```C++
-if (!ifile.is_open()) {
-    cout << "Failed to open file." << endl;
-    return 0;
-}
-```
-若文件正常打开，则一直读取知道文件结尾，即`!ifile.eof()`。随后进行分支判断：
-```C++
-while (!ifile.eof()) {
-    ifile >> ch;
-    string token(1, ch);  // 将当前字符装入字符串
-    switch (ch) {
-        // 纯单字符分界符
-        case '{': case '}': case '(': case ')': case ',': case ';':
-            output(token);
+void error(int type)
+{
+    switch (type)
+    {
+        case 1:
+        {
+            cout << "identifier exceeds maximum number" << endl;
             break;
-            // 单、双字符分解符 + - < >
-        case '+': case '-': case '<': case '>':
-            ifile >> ch;
-            if (isWhiteSpace(ch)) {
-                output(token);
-            }
-            else if (ch == '=' || ch == token[0] || (token[0] == '<' && ch == '>')) {
-                token = token.append(1, ch);
-                handleEndOfWord(token);
-            }
-            else {
-                handleError();
-            }
+        }
+        case 2:
+        {
+            cout << "the initial of identifier can't be digit" << endl;
             break;
-            // 单、双字符分解符 * / ! =
-        case '*': case '/': case '!': case '=':
-            ifile >> ch;
-            if (isWhiteSpace(ch)) {
-                output(token);
-            }
-            else if (token[0] == '/' && ch == '/') {
-                char temp[255];
-                ifile.getline(temp, 255);
-            }
-            else if (token[0] == '/' && ch == '*') {
-                bool isWellEnded = false;  // 注释是否正确结束
-                while (!ifile.eof()) {
-                    ifile >> ch;
-                    if (ch == '*') {
-                        ifile >> ch;
-                        if (ch == '/') {
-                            isWellEnded = true;
-                            break;
-                        }
-                        else {
-                            ifile.seekg(-1, ios::cur);
-                        }
-                    }
-                }
-                if (!isWellEnded) output("error");
-            }
-            else if (ch == '=') {
-                token = token.append(1, ch);
-                handleEndOfWord(token);
-            }
-            else {
-                handleError();
-            }
-            break;
-            // 单、双字符分解符 & |
-        case '&': case '|':
-            ifile >> ch;
-            if (isWhiteSpace(ch)) {
-                output(token);
-            }
-            else if (ch == token[0]) {
-                token = token.append(1, ch);
-                handleEndOfWord(token);
-            }
-            else {
-                handleError();
-            }
-            break;
-            // 空
-            case ' ': case '\n': case '\t': case '\r':
-            break;
+        }
         default:
-            // 整数
-            if (isNumber(ch)) {
-                token = "";
-                do {
-                    token += ch;
-                    ifile >> ch;
-                } while (isNumber(ch));
-                // 正确结束
-                if (isWhiteSpace(ch) || isSeparator(ch)) {
-                    output("integer", token);
-                }
-                    // 错误结束
-                else {
-                    do {
-                        ifile >> ch;
-                    } while (!isWhiteSpace(ch));
-                    output("error");
-                };
-                ifile.seekg(-1, ios::cur);
-            }
-                // 标识符
-            else if (isAlphabet(ch)) {
-                token = "";
-                int length = 0;
-                do {
-                    token += ch;
-                    length++;
-                    ifile >> ch;
-                } while (isAlphabet(ch) || isNumber(ch));
-                // 正确结束
-                if ((isWhiteSpace(ch) || isSeparator(ch)) && length <= 32) {
-                    output("identifier", token);
-                }
-                    // 错误结束
-                else {
-                    do {
-                        ifile >> ch;
-                    } while (!isWhiteSpace(ch));
-                    output("error");
-                };
-                ifile.seekg(-1, ios::cur);
-            }
-                // 啥都不是
-            else {
-                output("error");
-            }
+            break;
     }
 }
 ```
-最后关闭文件，退出程序：
+### Analysis
+`Analysis`函数为词法分析主体函数，对文本文件中的源程序字符串进行词法分析。
 ```C++
-ifile.close();
-ofile.close();
+int analysis(FILE *fp)
+{
+
+    char ch;
+    int cur_t = 1, sequence;
+    Glossary word;
+    ch = fgetc(fp);
+    while (ch == ' ')
+    {
+        ch = fgetc(fp);
+    }
+    if (isalpha(ch))
+    {
+        TOKEN[0] = ch;
+        ch = fgetc(fp);
+        cur_t = 1;
+        while (isalnum(ch) && cur_t < 32)
+        {
+            TOKEN[cur_t] = ch;
+            cur_t++;
+            ch = fgetc(fp);
+        }
+        if (cur_t == 32 && ch != ' ' && lookSep(ch).seq == 0)
+        {
+            error(1);
+        }
+        TOKEN[cur_t] = '\0';
+        fseek(fp, -1, 1);
+        word = lookup(TOKEN);
+        if (word.seq == 0)
+        {
+            out(9, TOKEN);
+        }
+        else
+        {
+            out(word.seq, " ");
+            if (word.seq == 2)
+            {
+                return 0;
+            }
+        }
+    }
+    else
+    {
+        if (isdigit(ch))
+        {
+            TOKEN[0] = ch;
+            ch = fgetc(fp);
+            cur_t = 1;
+            while (isdigit(ch) && cur_t < 32)
+            {
+                TOKEN[cur_t] = ch;
+                ch = fgetc(fp);
+                cur_t++;
+            }
+            if (ch != ' ')
+            {
+                if (lookSep(ch).seq == 0)
+                {
+                    error(2);
+                }
+            }
+            TOKEN[cur_t] = '\0';
+            fseek(fp, -1, 1);
+            out(12, TOKEN);
+        }
+        else
+        {
+            switch (ch)
+            {
+
+                case '<':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(42, " ");
+                    else if (ch == '<')
+                        out(36, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(26, " ");
+                    }
+                    break;
+                }
+                case '=':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(44, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(37, " ");
+                    }
+                    break;
+                }
+                case '>':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(46, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(38, " ");
+                    }
+                    break;
+                }
+                case '+':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(49, " ");
+                    else if (ch == '+')
+                        out(48, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(26, " ");
+                    }
+                    break;
+                }
+                case '-':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(51, " ");
+                    else if (ch == '-')
+                        out(50, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(27, " ");
+                    }
+                    break;
+                }
+                case '*':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(52, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(28, " ");
+                    }
+                    break;
+                }
+                case '/':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(53, " ");
+                    else if (ch == '/')
+                    {
+                        out(57, " ");
+                        while (ch != '\n')
+                        {
+                            ch = fgetc(fp);
+                        }
+                        break;
+                    }
+                    else if (ch == '*')
+                    {
+                        out(58, " ");
+                        while (1)
+                        {
+                            ch = fgetc(fp);
+                            while (ch != '*')
+                            {
+                                ch = fgetc(fp);
+                            }
+                            ch = fgetc(fp);
+                            if (ch != '/')
+                            {
+                            }
+                            else
+                            {
+                                out(59, " ");
+                                break;
+                            }
+                        }
+                        break;
+                    }
+
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(29, " ");
+                    }
+                    break;
+                }
+                case '&':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '&')
+                        out(56, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(40, " ");
+                    }
+                    break;
+                }
+                case '|':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '|')
+                        out(54, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(41, " ");
+                    }
+                    break;
+                }
+                case '!':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(55, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(39, " ");
+                    }
+                    break;
+                }
+                case ';':
+                {
+                    out(30, " ");
+                    break;
+                }
+
+                case ',':
+                {
+                    out(31, " ");
+                    break;
+                }
+
+                case '(':
+                {
+                    out(32, " ");
+                    break;
+                }
+
+                case ')':
+                {
+                    out(33, " ");
+                    break;
+                }
+                case '{':
+                {
+                    out(34, " ");
+                    break;
+                }
+                case '}':
+                {
+                    out(35, " ");
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
+    return 1;
+}
 ```
-### 函数调用关系
-```mermaid
-graph TD
-Z(入口)-->
-A(main)-->|访问|B(isAlphabet)
-A-->|访问|C(isNumber)
-A-->|访问|D(isSeparator)
-A---->T(END)
-A-->|访问|E(isWhiteSpace)
-A-->|访问|F(output)
-A-->|访问|G(handleEndOfWord)
-A-->|访问|H(handleError)
-H-->|访问|G
-G-->|访问|D
-G-->|访问|E
-```
-### 主要数据结构描述
-使用了map存储了ID与word之间的对应关系。
-## 测试结果
-### 测试用例1
-```C
-//111
-/*222*/
+## 程序测试
+### 测试文件1：
+```C++
+begin
 void main() {
     int sum = 0;
     for(int i = 0; i <= 10; i++) {
@@ -317,526 +416,626 @@ void main() {
 
     return 0;
 }
+end
 ```
-### 测试结果1
+运行结果
 ```
-[34, void]
-[44, main]
-[15, (]
-[16, )]
-[17, {]
-[35, int]
-[01, sum]
-[12, =]
-[02, 0]
-[13, ;]
-[40, for]
-[15, (]
-[35, int]
-[01, i]
-[12, =]
-[02, 0]
-[13, ;]
-[01, i]
-[20, <=]
-[02, 10]
-[13, ;]
-error
-[17, {]
-[01, sum]
-[28, +=]
-[01, i]
-[27, <<]
-[02, 2]
-[13, ;]
-[01, sum]
-[28, +=]
-[01, i]
-[26, >>]
-[02, 2]
-[13, ;]
-[01, sum]
-[28, +=]
-[02, 2]
-[13, ;]
-[01, sum]
-[30, *=]
-[02, 2]
-[13, ;]
-[01, sum]
-[31, /=]
-[02, 2]
-[13, ;]
-[01, sum]
-[29, -=]
-[02, 2]
-[13, ;]
-[38, if]
-[15, (]
-[01, sum]
-[23, ==]
-[02, 63]
-[32, &&]
-[01, i]
-[09, <]
-[02, 5]
-[33, ||]
-[01, sum]
-[23, ==]
-[02, 128]
-[16, )]
-[01, break]
-[13, ;]
-error
-[18, }]
-[43, return]
-[02, 0]
-[13, ;]
-[18, }]
-[18, }]
+( 1 , begin )
+( 13 , void )
+( 3 , main )
+( 32 , ( )
+( 33 , ) )
+( 34 , { )
+( 12 , int )
+( 9 , sum )
+( 37 , = )
+( 12 , 0 )
+( 30 , ; )
+( 7 , for )
+( 32 , ( )
+( 12 , int )
+( 9 , i )
+( 37 , = )
+( 12 , 0 )
+( 30 , ; )
+( 9 , i )
+( 42 , <= )
+( 12 , 10 )
+( 30 , ; )
+( 9 , i )
+( 48 , ++ )
+( 33 , ) )
+( 34 , { )
+( 9 , sum )
+( 49 , += )
+( 9 , i )
+( 36 , < )
+( 12 , 2 )
+( 30 , ; )
+( 9 , sum )
+( 49 , += )
+( 9 , i )
+( 38 , > )
+( 38 , > )
+( 12 , 2 )
+( 30 , ; )
+( 9 , sum )
+( 49 , += )
+( 12 , 2 )
+( 30 , ; )
+( 9 , sum )
+( 52 , *= )
+( 12 , 2 )
+( 30 , ; )
+( 9 , sum )
+( 53 , /= )
+( 12 , 2 )
+( 30 , ; )
+( 9 , sum )
+( 51 , -= )
+( 12 , 2 )
+( 30 , ; )
+( 4 , if )
+( 32 , ( )
+( 9 , sum )
+( 44 , == )
+( 12 , 63 )
+( 56 , && )
+( 9 , i )
+( 26 , + )
+( 12 , 5 )
+( 54 , || )
+( 9 , sum )
+( 44 , == )
+( 12 , 128 )
+( 33 , ) )
+( 20 , break )
+( 30 , ; )
+( 9 , i )
+( 55 , != )
+( 12 , 3 )
+( 30 , ; )
+( 35 , } )
+( 22 , return )
+( 12 , 0 )
+( 30 , ; )
+( 35 , } )
+( 2 , end )
 ```
-### 测试用例2
-```C
+### 测试文件2：
+```C++
+begin
 int main() {
     int a = 3;
     int b = 666;
     while (a > 0) {
         a--;
-        b -= 3;        
+        b -= 3;
     }
 
     return 0;
 }
+end
 ```
-### 测试结果2
+运行结果：
 ```
-[35, int]
-[44, main]
-[15, (]
-[16, )]
-[17, {]
-[35, int]
-[01, a]
-[12, =]
-[02, 3]
-[13, ;]
-[35, int]
-[01, b]
-[12, =]
-[02, 666]
-[13, ;]
-[42, while]
-[15, (]
-[01, a]
-[08, >]
-[02, 0]
-[16, )]
-[17, {]
-error
-[01, b]
-[29, -=]
-[02, 3]
-[13, ;]
-[18, }]
-[43, return]
-[02, 0]
-[13, ;]
-[18, }]
+( 1 , begin )
+( 12 , int )
+( 3 , main )
+( 32 , ( )
+( 33 , ) )
+( 34 , { )
+( 12 , int )
+( 9 , a )
+( 37 , = )
+( 12 , 3 )
+( 30 , ; )
+( 12 , int )
+( 9 , b )
+( 37 , = )
+( 12 , 666 )
+( 30 , ; )
+( 9 , while )
+( 32 , ( )
+( 9 , a )
+( 38 , > )
+( 12 , 0 )
+( 33 , ) )
+( 34 , { )
+( 9 , a )
+( 50 , -- )
+( 30 , ; )
+( 9 , b )
+( 51 , -= )
+( 12 , 3 )
+( 30 , ; )
+( 35 , } )
+( 22 , return )
+( 12 , 0 )
+( 30 , ; )
+( 35 , } )
+( 2 , end )
 ```
-## 附录
-### map内容
-```C++
-std::map<std::string, std::string> IDofWords = {
-        {"identifier", "01"},
-        {"integer", "02"},
-        {"+", "03"},
-        {"-", "04"},
-        {"*", "05"},
-        {"/", "06"},
-        {"!", "07"},
-        {">", "08"},
-        {"<", "09"},
-        {"&", "10"},
-        {"|", "11"},
-        {"=", "12"},
-        {";", "13"},
-        {",", "14"},
-        {"(", "15"},
-        {")", "16"},
-        {"{", "17"},
-        {"}", "18"},
-        {">=", "19"},
-        {"<=", "20"},
-        {"<>", "21"},
-        {"!=", "22"},
-        {"==", "23"},
-        {"++", "24"},
-        {"--", "25"},
-        {">>", "26"},
-        {"<<", "27"},
-        {"+=", "28"},
-        {"-=", "29"},
-        {"*=", "30"},
-        {"/=", "31"},
-        {"&&", "32"},
-        {"||", "33"},
-        {"void", "34"},
-        {"int", "35"},
-        {"float", "36"},
-        {"double", "37"},
-        {"if", "38"},
-        {"else", "39"},
-        {"for", "40"},
-        {"do", "41"},
-        {"while", "42"},
-        {"return", "43"},
-        {"main", "44"}
-};
-```
+## 附件
 ### main.cpp
 ```C++
 #include <bits/stdc++.h>
-#include "Classification.h"
-#include "Handler.h"
-#include "Output.h"
-
 using namespace std;
 
-ifstream ifile("sample1.c");
 ofstream ofile("output.txt");
 
-int main() {
-    char ch;  // 存放当前字符
-    ifile >> noskipws;  // 允许读空格
+typedef struct glossary
+{
+    string key;
+    int seq;
+    string mnemonic;
+} Glossary;
 
-    if (!ifile.is_open()) {
-        cout << "Failed to open file." << endl;
-        return 0;
-    }
-    while (!ifile.eof()) {
-        ifile >> ch;
-        string token(1, ch);  // 将当前字符装入字符串
+Glossary GLO[100] = {
+        {"begin", 1, "BEGIN"},
+        {"end", 2, "END"},
+        {"main", 3, "MAIN"},
+        {"if", 4, "IF"},
+        {"then", 5, "THEN"},
+        {"else", 6, "ELSE"},
+        {"for", 7, "FOR"},
+        {"do", 8, "DO"},
+        {"while", 9, "WHILE"},
+        {"identifier", 10, "ID"},
+        {"static", 11, "STATIC"},
+        {"int", 12, "INT"},
+        {"void", 13, "VOID"},
+        {"float", 14, "FLOAT"},
+        {"double", 15, "DOUBLE"},
+        {"end", 16, "END"},
+        {"char", 17, "CHAR"},
+        {"continue", 18, "CT"},
+        {"long", 19, "LONG"},
+        {"break", 20, "BREAK"},
+        {"typedef", 21, "TD"},
+        {"return", 22, "RETURN"},
+        {"const", 23, "CONST"},
+        {"switch", 24, "SWITCH"},
+        {"case", 25, "CASE"}
 
-        switch (ch) {
+};
+Glossary WSep[100] = {
+        {"+", 26, "ADD"},
+        {"-", 27, "SUB"},
+        {"*", 28, "MUL"},
+        {"/", 29, "DIV"},
+        {";", 30, "SEMI"},
+        {",", 31, "COMMA"},
+        {"(", 32, "LB"},
+        {")", 33, "RB"},
+        {"{", 34, "LBB"},
+        {"}", 35, "RBB"},
+        {"<", 36, "LT"},
+        {"=", 37, "EQ"},
+        {">", 38, "GT"},
+        {"!", 39, "EXC"},
+        {"&", 40, "POSA"},
+        {"|", 41, "POSB"}
+};
 
-            // 纯单字符分界符
-            case '{': case '}': case '(': case ')': case ',': case ';':
-                output(token);
-                break;
+Glossary DSep[100] = {
+        {"<=", 42, "LE"},
+        {"<<", 43, "LL"},
+        {"==", 44, "EE"},
+        {"<>", 45, "NEA"},
+        {">=", 46, "GE"},
+        {">>", 47, "GG"},
+        {"++", 48, "ADDS"},
+        {"+=", 49, "ADDE"},
+        {"--", 50, "SUBS"},
+        {"-=", 51, "SUBE"},
+        {"*=", 52, "MULE"},
+        {"/=", 53, "DIVE"},
+        {"||", 54, "OR"},
+        {"!=", 55, "NEB"},
+        {"&&", 56, "AND"},
+        {"//", 57, "NOTE"},
+        {"/*", 58, "NOTF"},
+        {"*/", 59, "NOTB"}
+};
 
-                // 单、双字符分解符 + - < >
-            case '+': case '-': case '<': case '>':
-                ifile >> ch;
-                if (isWhiteSpace(ch)) {
-                    output(token);
-                }
-                else if (ch == '=' || ch == token[0] || (token[0] == '<' && ch == '>')) {
-                    token = token.append(1, ch);
-                    handleEndOfWord(token);
-                }
-                else {
-                    handleError();
-                }
-                break;
+char TOKEN[33];
+Glossary lookup(string token);
+void out(int c, string val);
+void error(int type);
 
-                // 单、双字符分解符 * / ! =
-            case '*': case '/': case '!': case '=':
-                ifile >> ch;
-                if (isWhiteSpace(ch)) {
-                    output(token);
-                }
-                else if (token[0] == '/' && ch == '/') {
-                    char temp[255];
-                    ifile.getline(temp, 255);
-                }
-                else if (token[0] == '/' && ch == '*') {
-                    bool isWellEnded = false;  // 注释是否正确结束
-                    while (!ifile.eof()) {
-                        ifile >> ch;
-                        if (ch == '*') {
-                            ifile >> ch;
-                            if (ch == '/') {
-                                isWellEnded = true;
-                                break;
-                            }
-                            else {
-                                ifile.seekg(-1, ios::cur);
-                            }
-                        }
-                    }
-                    if (!isWellEnded) output("error");
-                }
-                else if (ch == '=') {
-                    token = token.append(1, ch);
-                    handleEndOfWord(token);
-                }
-                else {
-                    handleError();
-                }
-                break;
-
-                // 单、双字符分解符 & |
-            case '&': case '|':
-                ifile >> ch;
-                if (isWhiteSpace(ch)) {
-                    output(token);
-                }
-                else if (ch == token[0]) {
-                    token = token.append(1, ch);
-                    handleEndOfWord(token);
-                }
-                else {
-                    handleError();
-                }
-                break;
-
-                // 空
-                case ' ': case '\n': case '\t': case '\r':
-                break;
-
-            default:
-
-                // 整数
-                if (isNumber(ch)) {
-                    token = "";
-                    do {
-                        token += ch;
-                        ifile >> ch;
-                    } while (isNumber(ch));
-                    // 正确结束
-                    if (isWhiteSpace(ch) || isSeparator(ch)) {
-                        output("integer", token);
-                    }
-                        // 错误结束
-                    else {
-                        do {
-                            ifile >> ch;
-                        } while (!isWhiteSpace(ch));
-                        output("error");
-                    };
-                    ifile.seekg(-1, ios::cur);
-                }
-
-                    // 标识符
-                else if (isAlphabet(ch)) {
-                    token = "";
-                    int length = 0;
-                    do {
-                        token += ch;
-                        length++;
-                        ifile >> ch;
-                    } while (isAlphabet(ch) || isNumber(ch));
-                    // 正确结束
-                    if ((isWhiteSpace(ch) || isSeparator(ch)) && length <= 32) {
-                        output("identifier", token);
-                    }
-                        // 错误结束
-                    else {
-                        do {
-                            ifile >> ch;
-                        } while (!isWhiteSpace(ch));
-                        output("error");
-                    };
-                    ifile.seekg(-1, ios::cur);
-                }
-
-                    // 啥都不是
-                else {
-                    output("error");
-                }
+Glossary lookSep(char ch)
+{
+    char *sep = new char[2];
+    sep[0] = ch;
+    sep[1] = '\0';
+    int len = sizeof(WSep) / sizeof(WSep[0]);
+    for (int i = 0; i < len; i++)
+    {
+        if (sep == WSep[i].key)
+        {
+            return WSep[i];
         }
     }
-    ifile.close();
-    ofile.close();
+    Glossary res = {" ", 0, " "};
+    return res;
+}
+
+Glossary lookup(string token)
+{
+    int len = sizeof(GLO) / sizeof(GLO[0]);
+    for (int i = 0; i < len; i++)
+    {
+        if (token == GLO[i].key)
+        {
+            return GLO[i];
+        }
+    }
+    Glossary res = {" ", 0, " "};
+    return res;
+}
+
+void out(int c, string val)
+{
+    if (c <= 25)
+    {
+        if (val == " ")
+        {
+            cout << "( " << c << " , " << GLO[c - 1].key << " )" << endl;
+            ofile << "( " << c << " , " << GLO[c - 1].key << " )" << endl;
+        }
+        else
+        {
+            cout << "( " << c << " , " << val << " )" << endl;
+            ofile << "( " << c << " , " << val << " )" << endl;
+        }
+    }
+    else if (c <= 41)
+    {
+        cout << "( " << c << " , " << WSep[c - 26].key << " )" << endl;
+        ofile << "( " << c << " , " << WSep[c - 26].key << " )" << endl;
+    }
+    else
+    {
+        cout << "( " << c << " , " << DSep[c - 42].key << " )" << endl;
+        ofile << "( " << c << " , " << DSep[c - 42].key << " )" << endl;
+    }
+}
+
+void error(int type)
+{
+    switch (type)
+    {
+        case 1:
+        {
+            cout << "identifier exceeds maximum number" << endl;
+            break;
+        }
+        case 2:
+        {
+            cout << "the initial of identifier can't be digit" << endl;
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+int analysis(FILE *fp)
+{
+
+    char ch;
+    int cur_t = 1, sequence;
+    Glossary word;
+    ch = fgetc(fp);
+    while (ch == ' ')
+    {
+        ch = fgetc(fp);
+    }
+    if (isalpha(ch))
+    {
+        TOKEN[0] = ch;
+        ch = fgetc(fp);
+        cur_t = 1;
+        while (isalnum(ch) && cur_t < 32)
+        {
+            TOKEN[cur_t] = ch;
+            cur_t++;
+            ch = fgetc(fp);
+        }
+        if (cur_t == 32 && ch != ' ' && lookSep(ch).seq == 0)
+        {
+            error(1);
+        }
+        TOKEN[cur_t] = '\0';
+        fseek(fp, -1, 1);
+        word = lookup(TOKEN);
+        if (word.seq == 0)
+        {
+            out(9, TOKEN);
+        }
+        else
+        {
+            out(word.seq, " ");
+            if (word.seq == 2)
+            {
+                return 0;
+            }
+        }
+    }
+    else
+    {
+        if (isdigit(ch))
+        {
+            TOKEN[0] = ch;
+            ch = fgetc(fp);
+            cur_t = 1;
+            while (isdigit(ch) && cur_t < 32)
+            {
+                TOKEN[cur_t] = ch;
+                ch = fgetc(fp);
+                cur_t++;
+            }
+            if (ch != ' ')
+            {
+                if (lookSep(ch).seq == 0)
+                {
+                    error(2);
+                }
+            }
+            TOKEN[cur_t] = '\0';
+            fseek(fp, -1, 1);
+            out(12, TOKEN);
+        }
+        else
+        {
+            switch (ch)
+            {
+
+                case '<':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(42, " ");
+                    else if (ch == '<')
+                        out(36, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(26, " ");
+                    }
+                    break;
+                }
+                case '=':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(44, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(37, " ");
+                    }
+                    break;
+                }
+                case '>':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(46, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(38, " ");
+                    }
+                    break;
+                }
+                case '+':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(49, " ");
+                    else if (ch == '+')
+                        out(48, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(26, " ");
+                    }
+                    break;
+                }
+                case '-':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(51, " ");
+                    else if (ch == '-')
+                        out(50, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(27, " ");
+                    }
+                    break;
+                }
+                case '*':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(52, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(28, " ");
+                    }
+                    break;
+                }
+                case '/':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(53, " ");
+                    else if (ch == '/')
+                    {
+                        out(57, " ");
+                        while (ch != '\n')
+                        {
+                            ch = fgetc(fp);
+                        }
+                        break;
+                    }
+                    else if (ch == '*')
+                    {
+                        out(58, " ");
+                        while (1)
+                        {
+                            ch = fgetc(fp);
+                            while (ch != '*')
+                            {
+                                ch = fgetc(fp);
+                            }
+                            ch = fgetc(fp);
+                            if (ch != '/')
+                            {
+                            }
+                            else
+                            {
+                                out(59, " ");
+                                break;
+                            }
+                        }
+                        break;
+                    }
+
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(29, " ");
+                    }
+                    break;
+                }
+                case '&':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '&')
+                        out(56, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(40, " ");
+                    }
+                    break;
+                }
+                case '|':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '|')
+                        out(54, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(41, " ");
+                    }
+                    break;
+                }
+                case '!':
+                {
+                    ch = fgetc(fp);
+                    if (ch == '=')
+                        out(55, " ");
+                    else
+                    {
+                        fseek(fp, -1, 1);
+                        out(39, " ");
+                    }
+                    break;
+                }
+                case ';':
+                {
+                    out(30, " ");
+                    break;
+                }
+
+                case ',':
+                {
+                    out(31, " ");
+                    break;
+                }
+
+                case '(':
+                {
+                    out(32, " ");
+                    break;
+                }
+
+                case ')':
+                {
+                    out(33, " ");
+                    break;
+                }
+                case '{':
+                {
+                    out(34, " ");
+                    break;
+                }
+                case '}':
+                {
+                    out(35, " ");
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
+    return 1;
+}
+
+int main()
+{
+    FILE *fp;
+    int flag = 1;
+    fp = fopen("test.c", "r+");
+
+    while (flag != 0)
+        flag = analysis(fp);
 
     return 0;
 }
 ```
-### Classification.h
+### 样例1
 ```C++
-//
-// Created by 王子龙 on 2021/4/22.
-//
-
-#ifndef CODE_CLASSIFICATION_H
-#define CODE_CLASSIFICATION_H
-
-bool isAlphabet(char ch);
-bool isNumber(char ch);
-bool isWhiteSpace(char ch);
-bool isSeparator(char ch);
-
-#endif //CODE_CLASSIFICATION_H
-```
-### Classification.cpp
-```C++
-//
-// Created by 王子龙 on 2021/4/22.
-//
-
-bool isAlphabet(char ch) {
-    return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'));
-}
-
-bool isNumber(char ch) {
-    return (ch >= '0' && ch <= '9');
-}
-
-bool isWhiteSpace(char ch) {
-    return (ch == ' ' || ch == '\n' || ch == '\t' || ch == '\r');
-}
-
-bool isSeparator(char ch) {
-    return (ch == ';' || ch == ',' || ch == '(' || ch == ')' || ch == '{' || ch == '}');
-}
-```
-### Handler.h
-```C++
-//
-// Created by 王子龙 on 2021/4/22.
-//
-
-#ifndef CODE_HANDLER_H
-#define CODE_HANDLER_H
-
-void handleError();
-void handleEndOfWord(std::string str);
-
-#endif //CODE_HANDLER_H
-```
-### Handler.cpp
-```C++
-//
-// Created by 王子龙 on 2021/4/22.
-//
-#include <fstream>
-#include <string>
-#include "Classification.h"
-#include "Output.h"
-
-using namespace std;
-extern ifstream ifile;
-extern ofstream ofile;
-
-// 错误处理 读到不是空格的地方
-void handleError() {
-    char ch;
-    do {
-        ifile >> ch;
-    } while (!isWhiteSpace(ch));
-    output("error");
-}
-
-// 正确结束则打印 错误结束则错误处理
-void handleEndOfWord(string str) {
-    char ch;
-    ifile >> ch;
-    // 正确结束
-    if (isWhiteSpace(ch) || isSeparator(ch)){
-        output(str);
+begin
+void main() {
+    int sum = 0;
+    for(int i = 0; i <= 10; i++) {
+        sum += i << 2;
+        sum += i >> 2;
+        sum += 2;
+        sum *= 2;
+        sum /= 2;
+        sum -= 2;
+     if (sum == 63 && i < 5 || sum == 128)
+          break;
+     i!=3;
     }
-        // 错误结束
-    else {
-        handleError();
-    };
-    ifile.seekg(-1, ios::cur);  // 文件指针回退
+
+    return 0;
 }
+end
 ```
-### Output.h
+### 样例2
 ```C++
-//
-// Created by 王子龙 on 2021/4/22.
-//
-
-#ifndef CODE_OUTPUT_H
-#define CODE_OUTPUT_H
-
-void output(std::string type, std::string item = "");
-
-#endif //CODE_OUTPUT_H
-```
-### Output.cpp
-```C++
-//
-// Created by 王子龙 on 2021/4/22.
-//
-#include <bits/stdc++.h>
-
-using namespace std;
-
-extern ifstream ifile;
-extern ofstream ofile;
-
-std::map<std::string, std::string> IDofWords = {
-        {"identifier", "01"},
-        {"integer", "02"},
-        {"+", "03"},
-        {"-", "04"},
-        {"*", "05"},
-        {"/", "06"},
-        {"!", "07"},
-        {">", "08"},
-        {"<", "09"},
-        {"&", "10"},
-        {"|", "11"},
-        {"=", "12"},
-        {";", "13"},
-        {",", "14"},
-        {"(", "15"},
-        {")", "16"},
-        {"{", "17"},
-        {"}", "18"},
-        {">=", "19"},
-        {"<=", "20"},
-        {"<>", "21"},
-        {"!=", "22"},
-        {"==", "23"},
-        {"++", "24"},
-        {"--", "25"},
-        {">>", "26"},
-        {"<<", "27"},
-        {"+=", "28"},
-        {"-=", "29"},
-        {"*=", "30"},
-        {"/=", "31"},
-        {"&&", "32"},
-        {"||", "33"},
-        {"void", "34"},
-        {"int", "35"},
-        {"float", "36"},
-        {"double", "37"},
-        {"if", "38"},
-        {"else", "39"},
-        {"for", "40"},
-        {"do", "41"},
-        {"while", "42"},
-        {"return", "43"},
-        {"main", "44"}
-};
-
-void output(string type, string item = "") {
-    if (type == "error") {
-        ofile << "error" << endl;
-        cout << "error" << endl;
+begin
+int main() {
+    int a = 3;
+    int b = 666;
+    while (a > 0) {
+        a--;
+        b -= 3;
     }
-    else if (type == "integer") {
-        ofile << "[" + IDofWords[type] + ", " + item + "]" << endl;
-        cout << "[" + IDofWords[type] + ", " + item + "]" << endl;
-    }
-    else if (type == "identifier") {
-        // 判断是否为保留字
-        if (IDofWords.count(item) == 1) {
-            ofile << "[" + IDofWords[item] + ", " + item + "]" << endl;
-            cout << "[" + IDofWords[item] + ", " + item + "]" << endl;
-        }
-        else {
-            ofile << "[" + IDofWords[type] + ", " + item + "]" << endl;
-            cout << "[" + IDofWords[type] + ", " + item + "]" << endl;
-        }
-    }
-    else {
-        ofile << "[" + IDofWords[type] + ", " + type + "]" << endl;
-        cout << "[" + IDofWords[type] + ", " + type + "]" << endl;
-    }
+
+    return 0;
 }
+end
 ```

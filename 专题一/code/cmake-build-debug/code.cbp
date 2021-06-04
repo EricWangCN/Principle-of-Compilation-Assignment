@@ -80,24 +80,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Classification.cpp">
-			<Option target="code"/>
-		</Unit>
-		<Unit filename="/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Classification.h">
-			<Option target="code"/>
-		</Unit>
-		<Unit filename="/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Handler.cpp">
-			<Option target="code"/>
-		</Unit>
-		<Unit filename="/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Handler.h">
-			<Option target="code"/>
-		</Unit>
-		<Unit filename="/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Output.cpp">
-			<Option target="code"/>
-		</Unit>
-		<Unit filename="/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/Output.h">
-			<Option target="code"/>
-		</Unit>
 		<Unit filename="/Users/wangzilong/Desktop/Study/Assignment/编译原理/Principle-of-Compilation-Assignment/专题一/code/main.cpp">
 			<Option target="code"/>
 		</Unit>
