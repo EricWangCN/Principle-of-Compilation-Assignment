@@ -533,7 +533,6 @@ bool call_F()
 
 int main()
 {
-
     initial();
     int vn_len = sizeof(vns) / sizeof(vns[0]);
     for (int i = 0; i < vn_len; i++)

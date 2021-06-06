@@ -2,15 +2,16 @@
 using namespace std;
 
 ofstream ofile("output.txt");
+ofstream ofile6("test.txt");
 
 typedef struct glossary
 {
     string key;
     int seq;
-    string mnemonic;
+    string mnemonic; // 助记符
 } Glossary;
 
-Glossary GLO[100] = {
+Glossary GLO[] = {
         {"begin", 1, "BEGIN"},
         {"end", 2, "END"},
         {"main", 3, "MAIN"},
@@ -38,15 +39,15 @@ Glossary GLO[100] = {
         {"case", 25, "CASE"}
 
 };
-Glossary WSep[100] = {
+Glossary WSep[] = {
         {"+", 26, "ADD"},
         {"-", 27, "SUB"},
         {"*", 28, "MUL"},
         {"/", 29, "DIV"},
         {";", 30, "SEMI"},
         {",", 31, "COMMA"},
-        {"(", 32, "LB"},
-        {")", 33, "RB"},
+        {"(", 30, "LB"},
+        {")", 32, "RB"},
         {"{", 34, "LBB"},
         {"}", 35, "RBB"},
         {"<", 36, "LT"},
@@ -57,7 +58,7 @@ Glossary WSep[100] = {
         {"|", 41, "POSB"}
 };
 
-Glossary DSep[100] = {
+Glossary DSep[] = {
         {"<=", 42, "LE"},
         {"<<", 43, "LL"},
         {"==", 44, "EE"},
@@ -114,6 +115,10 @@ Glossary lookup(string token)
     return res;
 }
 
+void out6(int c, string op) {
+    ofile6 << "(" << c << ",\"" << op << "\")" << endl;
+}
+
 void out(int c, string val)
 {
     if (c <= 25)
@@ -121,23 +126,23 @@ void out(int c, string val)
         if (val == " ")
         {
             cout << "( " << c << " , " << GLO[c - 1].key << " )" << endl;
-            ofile << "( " << c << " , " << GLO[c - 1].key << " )" << endl;
+            ofile << "(" << c << ",\"" << GLO[c - 1].key << "\")" << endl;
         }
         else
         {
             cout << "( " << c << " , " << val << " )" << endl;
-            ofile << "( " << c << " , " << val << " )" << endl;
+            ofile << "(" << c << ",\"" << val << "\")" << endl;
         }
     }
     else if (c <= 41)
     {
         cout << "( " << c << " , " << WSep[c - 26].key << " )" << endl;
-        ofile << "( " << c << " , " << WSep[c - 26].key << " )" << endl;
+        ofile << "(" << c << ",\"" << WSep[c - 26].key << "\")" << endl;
     }
     else
     {
         cout << "( " << c << " , " << DSep[c - 42].key << " )" << endl;
-        ofile << "( " << c << " , " << DSep[c - 42].key << " )" << endl;
+        ofile << "(" << c << ",\"" << WSep[c - 42].key << "\")" << endl;
     }
 }
 
@@ -162,7 +167,6 @@ void error(int type)
 
 int analysis(FILE *fp)
 {
-
     char ch;
     int cur_t = 1, sequence;
     Glossary word;
@@ -192,6 +196,7 @@ int analysis(FILE *fp)
         if (word.seq == 0)
         {
             out(9, TOKEN);
+            out6(14,TOKEN);
         }
         else
         {
@@ -230,7 +235,6 @@ int analysis(FILE *fp)
         {
             switch (ch)
             {
-
                 case '<':
                 {
                     ch = fgetc(fp);
@@ -254,6 +258,7 @@ int analysis(FILE *fp)
                     {
                         fseek(fp, -1, 1);
                         out(37, " ");
+                        out6(7,"=");
                     }
                     break;
                 }
@@ -280,6 +285,7 @@ int analysis(FILE *fp)
                     {
                         fseek(fp, -1, 1);
                         out(26, " ");
+                        out6(8,"+");
                     }
                     break;
                 }
@@ -306,6 +312,7 @@ int analysis(FILE *fp)
                     {
                         fseek(fp, -1, 1);
                         out(28, " ");
+                        out6(10,"*");
                     }
                     break;
                 }
@@ -317,6 +324,7 @@ int analysis(FILE *fp)
                     else if (ch == '/')
                     {
                         out(57, " ");
+
                         while (ch != '\n')
                         {
                             ch = fgetc(fp);
@@ -350,6 +358,7 @@ int analysis(FILE *fp)
                     {
                         fseek(fp, -1, 1);
                         out(29, " ");
+                        out6(11,"/");
                     }
                     break;
                 }
@@ -404,12 +413,14 @@ int analysis(FILE *fp)
                 case '(':
                 {
                     out(32, " ");
+                    out6(12,"(");
                     break;
                 }
 
                 case ')':
                 {
                     out(33, " ");
+                    out6(13,")");
                     break;
                 }
                 case '{':
@@ -438,6 +449,8 @@ int main()
 
     while (flag != 0)
         flag = analysis(fp);
+
+    ofile6 << "(15,\"#\")";
 
     return 0;
 }
